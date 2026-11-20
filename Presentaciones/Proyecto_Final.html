@@ -1,19 +1,377 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VeredaSegura — Proyecto final</title>
-<style>
-:root{--violet:#65439a;--teal:#27aa9b;--ink:#203047;--paper:#fbfcff;--muted:#66758a}*{box-sizing:border-box}body{margin:0;background:#e9edf4;color:var(--ink);font:18px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}.slide{display:none;min-height:100vh;padding:7vh 9vw 11vh;background:var(--paper);position:relative;overflow:auto}.slide.active{display:flex;flex-direction:column;justify-content:center}.slide:before{content:"";position:absolute;inset:0 auto 0 0;width:14px;background:linear-gradient(var(--violet),var(--teal))}h1{font-size:clamp(2.4rem,6vw,5rem);line-height:1.05;margin:.2em 0;color:var(--violet)}h2{font-size:clamp(2rem,4vw,3.4rem);color:var(--violet);margin:.1em 0 .5em}h3{color:var(--teal);margin-bottom:.3em}.eyebrow{letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:700}.subtitle{font-size:1.4rem;color:var(--muted);max-width:850px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}.card{padding:20px 22px;background:white;border:1px solid #e0e6ef;border-radius:16px;box-shadow:0 8px 24px #26334b0d}.big{font-size:2.4rem;font-weight:800;color:var(--teal)}.bar{height:18px;background:#e4e9f0;border-radius:99px;margin:10px 0;overflow:hidden}.bar i{display:block;height:100%;background:var(--teal)}.callout{padding:16px 20px;border-left:5px solid var(--teal);background:#eaf8f6;border-radius:8px}.small{font-size:.85rem;color:var(--muted)}footer{position:fixed;bottom:0;left:0;right:0;background:#fffE;padding:12px 5vw;display:flex;align-items:center;gap:16px;box-shadow:0 -3px 15px #22334412}button{border:0;border-radius:9px;background:var(--violet);color:white;padding:10px 18px;font-size:1rem;cursor:pointer}button:hover{background:#50317d}#progress{height:6px;background:var(--teal);width:0;position:absolute;bottom:0;left:0;transition:width .2s}footer span{margin-left:auto;color:var(--muted)}ul{padding-left:1.2em}li{margin:.35em 0}.quote{font-size:1.5rem;font-weight:600;max-width:950px}@media print{.slide{display:flex!important;min-height:100vh;page-break-after:always}footer{display:none}}
-</style></head><body>
-<section class="slide active"><p class="eyebrow">Data Science · EnergIA Digital 2026 · Exposición de 15 minutos</p><h1>VeredaSegura</h1><p class="subtitle">¿Qué patrones del arbolado urbano aparecen asociados con daño observado en veredas?</p><div class="callout"><b>Proyecto educativo de análisis de datos.</b> No es un predictor de daño futuro ni un sistema de decisión municipal.</div><p class="small">8 diapositivas · Enzo Fernández · Juan Ignacio Olivares · Gabriel Quispe</p></section>
-<section class="slide"><p class="eyebrow">01 · El problema</p><h2>Una vereda dañada afecta la movilidad cotidiana</h2><div class="grid"><article class="card"><h3>Pregunta</h3><p>¿Qué características de árboles y entorno se asocian con que la vereda haya sido registrada como dañada?</p></article><article class="card"><h3>Uso potencial</h3><p>Explorar patrones que ayuden a formular hipótesis para inspecciones, siempre con revisión humana y evidencia local.</p></article><article class="card"><h3>Qué no hacemos</h3><p>No inferimos causalidad, fecha de rotura ni prioridad real de obras.</p></article></div></section>
-<section class="slide"><p class="eyebrow">02 · Los datos</p><h2>Un censo histórico, útil para aprender; no para representar hoy</h2><div class="grid"><article class="card"><div class="big">683.788</div><p>registros en el censo original (aprox.)</p></article><article class="card"><div class="big">45</div><p>variables en la fuente NYC Open Data</p></article><article class="card"><div class="big">2015</div><p>año del relevamiento de árboles de calle</p></article></div><p>Para el modelado se usa una muestra aleatoria reproducible de hasta 100.000 árboles vivos con diámetro válido y vereda conocida.</p><p class="small">Fuente: NYC Parks, 2015 Street Tree Census — Tree Data. No es un dataset de Argentina ni actual.</p></section>
-<section class="slide"><p class="eyebrow">03 · EDA y preparación</p><h2>De registros a variables analizables</h2><div class="grid"><article class="card"><h3>Calidad</h3><p>Revisamos faltantes, clases de sidewalk, diámetros y registros no elegibles.</p></article><article class="card"><h3>Variables derivadas</h3><p>Resumimos conflictos de raíces, tronco y ramas; agrupamos especies poco frecuentes.</p></article><article class="card"><h3>Prevención de leakage</h3><p>Excluimos `sidewalk` de X; codificación e imputación se integran al pipeline de ML.</p></article></div><div class="callout">En el conjunto original, cerca de 29% de las veredas etiquetadas figura como Damage y 71% como NoDamage. Verificar cifras en la muestra usada para reentrenar.</div></section>
-<section class="slide"><p class="eyebrow">04 · Aprendizaje supervisado</p><h2>El modelo recupera parte de la clase minoritaria</h2><div class="grid"><article class="card"><h3>Evaluación</h3><p>GridSearchCV, validación estratificada y test separado de 20.000 registros.</p><p>Mejores parámetros: 100 árboles, profundidad 16, mínimo 10 observaciones por hoja.</p></article><article class="card"><h3>Test · clase Damage</h3><div class="big">F1 = 0,548</div><p>Recall 0,615 · Precisión 0,494 · ROC-AUC 0,741</p><p class="small">Accuracy 0,708. Dummy mayoritario: accuracy 0,712, F1 Damage = 0.</p></article></div><div class="bar"><i style="width:54.8%"></i></div><p>La precisión moderada implica falsas alarmas; recall 0,615 implica que también quedan daños observados sin detectar. La matriz de confusión es [[10.623, 3.622], [2.216, 3.539]].</p></section>
-<section class="slide"><p class="eyebrow">05 · Aprendizaje no supervisado</p><h2>Grupos exploratorios, no categorías de riesgo</h2><div class="grid"><article class="card"><h3>K-Means · 10.000 árboles</h3><p>Silhouette máximo con k=3: 0,282. Grupos de 670, 7.004 y 2.326 árboles; el último tuvo mayor diámetro mediano (16 pulgadas) y más conflictos radiculares (mediana 1).</p></article><article class="card"><h3>DBSCAN</h3><p>5 grupos, 1,2% de puntos considerados ruido; silhouette 0,333 entre puntos no-ruido.</p></article></div><p class="quote">La separación es modesta y depende de variables, codificación y parámetros. No son grupos de riesgo validados.</p></section>
-<section class="slide"><p class="eyebrow">06 · API y demo</p><h2>Del notebook a una interfaz reproducible</h2><div class="grid"><article class="card"><h3>Entrenamiento</h3><code>python Final/train.py</code><p>Genera el pipeline y métricas en `Final/artifacts/`.</p></article><article class="card"><h3>Servicio</h3><code>uvicorn Final.app:app --reload</code><p>FastAPI: `/health`, `/predict` y documentación `/docs`.</p></article></div><div class="callout">La API devuelve clase estimada y probabilidad para el estado observado. La probabilidad no está calibrada para uso operativo; no automatizar decisiones.</div></section>
-<section class="slide"><p class="eyebrow">07 · Responsabilidad y cierre</p><h2>Una señal estadística no reemplaza una política pública</h2><ul><li>El censo es de NYC y de 2015; voluntariado, faltantes y cobertura desigual pueden sesgar los resultados.</li><li>Variables y etiqueta se relevaron en el mismo período: no hay evidencia temporal para pronosticar roturas futuras.</li><li>Las variables geográficas pueden actuar como proxies y reforzar desigualdades de mantenimiento.</li><li>Una aplicación real exige datos recientes, evaluación por zona, inspección humana, auditoría y consulta comunitaria.</li></ul><p class="quote">Aprendizaje principal: definir bien la pregunta y los límites importa tanto como elegir el algoritmo.</p><p>Gracias · Preguntas</p></section>
-<footer><button id="prev" aria-label="Anterior">← Anterior</button><button id="next" aria-label="Siguiente">Siguiente →</button><span id="count"></span><div id="progress"></div></footer>
-<script>const slides=[...document.querySelectorAll('.slide')];let i=0;function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,j)=>s.classList.toggle('active',j===i));document.querySelector('#count').textContent=`${i+1} / ${slides.length}`;document.querySelector('#progress').style.width=`${(i+1)/slides.length*100}%`}document.querySelector('#prev').onclick=()=>show(i-1);document.querySelector('#next').onclick=()=>show(i+1);document.addEventListener('keydown',e=>{if(['ArrowRight',' ','PageDown'].includes(e.key))show(i+1);if(['ArrowLeft','PageUp'].includes(e.key))show(i-1)});show(0);</script>
-</body></html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Presentación del proyecto VeredaSegura: análisis de daño observado en veredas de NYC, censo 2015.">
+  <title>VeredaSegura | Proyecto final de Data Science</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #132a3a;
+      --navy-2: #203e50;
+      --green: #087f68;
+      --green-light: #dff3ec;
+      --gold: #e1a928;
+      --red: #c45a50;
+      --ink: #182b38;
+      --muted: #536978;
+      --paper: #f5f7f5;
+      --white: #fff;
+      --line: #d8e1dd;
+      --shadow: 0 16px 45px #102d3c14;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { background: #e8eeeb; }
+    body { margin: 0; color: var(--ink); background: #e8eeeb; font-size: clamp(16px, 1.28vw, 20px); line-height: 1.42; }
+    button, a { font: inherit; }
+    .deck { min-height: 100vh; padding: 20px 20px 88px; }
+    .slide {
+      display: none; position: relative; width: min(1280px, 100%); min-height: min(720px, calc(100vh - 126px));
+      margin: 0 auto; padding: clamp(28px, 5vw, 68px) clamp(28px, 6vw, 82px);
+      overflow: hidden; border: 1px solid #dfe7e3; border-radius: 22px; background: var(--paper); box-shadow: var(--shadow);
+    }
+    .slide.active { display: flex; flex-direction: column; justify-content: center; animation: appear .22s ease-out; }
+    @keyframes appear { from { opacity: .72; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+    .slide:before { position: absolute; content: ""; left: 0; top: 0; bottom: 0; width: 9px; background: var(--green); }
+    .slide.cover { color: var(--white); background: var(--navy); border-color: var(--navy); }
+    .slide.cover:before { background: var(--gold); }
+    .cover:after { content: ""; position: absolute; right: -9%; top: -34%; width: 48%; aspect-ratio: 1; border: 1px solid #ffffff20; border-radius: 50%; box-shadow: 0 0 0 36px #ffffff08, 0 0 0 72px #ffffff06; pointer-events: none; }
+    .eyebrow { margin: 0 0 12px; color: var(--green); font-size: .78em; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .cover .eyebrow { color: #83d7bd; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 800px; margin-bottom: 16px; font-size: clamp(48px, 8vw, 92px); line-height: .98; letter-spacing: -.045em; }
+    h2 { max-width: 1000px; margin-bottom: 20px; color: var(--navy); font-size: clamp(32px, 4vw, 50px); line-height: 1.08; letter-spacing: -.03em; }
+    h3 { margin-bottom: 7px; color: var(--green); font-size: 1.05em; }
+    .cover h2 { margin: 0 0 22px; color: #dcece6; font-size: clamp(24px, 3vw, 36px); font-weight: 500; line-height: 1.25; }
+    .lead { max-width: 850px; color: var(--muted); font-size: clamp(20px, 2vw, 27px); }
+    .cover .lead { color: #d2e0e4; }
+    .team { margin: 36px 0 0; color: #c4d6dc; font-size: .9em; }
+    .time-tag { position: absolute; top: 26px; right: 30px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: var(--white); font-size: .75em; font-weight: 700; }
+    .cover .time-tag { border-color: #ffffff32; color: #d9e8e5; background: #ffffff0c; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card { min-width: 0; padding: 20px 22px; border: 1px solid var(--line); border-radius: 15px; background: var(--white); box-shadow: 0 5px 16px #15354308; }
+    .card p:last-child { margin-bottom: 0; }
+    .metric { color: var(--green); font-size: clamp(30px, 4vw, 48px); font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+    .metric-label { margin: 8px 0 0; color: var(--muted); font-size: .9em; }
+    .callout { margin-top: 18px; padding: 14px 18px; border-left: 4px solid var(--gold); border-radius: 7px; background: #fff8e8; }
+    .callout.green { border-color: var(--green); background: var(--green-light); }
+    .small { color: var(--muted); font-size: .82em; }
+    .source { margin: 12px 0 0; color: var(--muted); font-size: .72em; }
+    .chart-card { padding: 18px 22px; border: 1px solid var(--line); border-radius: 15px; background: var(--white); }
+    .chart-title { margin-bottom: 14px; color: var(--navy); font-size: .95em; font-weight: 750; }
+    .stacked { display: flex; height: 34px; overflow: hidden; border-radius: 8px; background: #e5ece8; }
+    .stacked .no-damage { display: flex; align-items: center; justify-content: center; width: 71.22%; color: var(--white); background: var(--green); font-size: .8em; font-weight: 750; }
+    .stacked .damage { display: flex; align-items: center; justify-content: center; width: 28.78%; color: var(--white); background: var(--gold); font-size: .8em; font-weight: 750; }
+    .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 12px; color: var(--muted); font-size: .82em; }
+    .key { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 3px; background: var(--green); }
+    .key.gold { background: var(--gold); }
+    .bar-chart { display: grid; gap: 9px; }
+    .bar-row { display: grid; grid-template-columns: 96px minmax(80px, 1fr) 58px; align-items: center; gap: 10px; font-size: .82em; }
+    .bar-label { color: var(--muted); text-align: right; }
+    .track { height: 17px; overflow: hidden; border-radius: 4px; background: #edf1ef; }
+    .fill { height: 100%; border-radius: inherit; background: var(--green); }
+    .bar-value { color: var(--navy); font-weight: 750; }
+    .columns { display: grid; grid-template-columns: 1.02fr .98fr; gap: 20px; align-items: stretch; }
+    .flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
+    .flow-step { position: relative; padding: 16px 13px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
+    .flow-step:not(:last-child):after { position: absolute; content: "›"; top: 35%; right: -13px; z-index: 1; color: var(--green); font-size: 26px; font-weight: 800; }
+    .flow-step b { display: block; margin-bottom: 5px; color: var(--navy); font-size: .86em; }
+    .flow-step span { display: block; color: var(--muted); font-size: .75em; line-height: 1.3; }
+    .tech-list { display: grid; gap: 10px; }
+    .tech { display: grid; grid-template-columns: 116px 1fr; gap: 12px; padding: 11px 14px; border-radius: 10px; background: var(--white); border: 1px solid var(--line); font-size: .83em; }
+    .tech b { color: var(--green); }
+    .matrix { width: 100%; border-collapse: separate; border-spacing: 5px; text-align: center; font-size: .85em; }
+    .matrix th { padding: 7px 5px; color: var(--muted); font-size: .78em; font-weight: 650; }
+    .matrix td { padding: 14px 8px; border-radius: 9px; color: var(--navy); background: #e9f3ef; font-size: 1.2em; font-weight: 800; }
+    .matrix td.high { color: #075844; background: #bfe8d8; }
+    .matrix td.miss { color: #8e3f37; background: #f8ddd6; }
+    .matrix td.false-alarm { color: #76540a; background: #fff0c9; }
+    .matrix-caption { margin: 4px 0 0; color: var(--muted); font-size: .74em; }
+    .cluster-bars .bar-row { grid-template-columns: 82px minmax(60px, 1fr) 54px; }
+    .cluster-bars .fill.c0 { background: #597f9b; }
+    .cluster-bars .fill.c1 { background: var(--green); }
+    .cluster-bars .fill.c2 { background: #c99227; }
+    .code { display: block; padding: 12px 14px; border-radius: 9px; color: #e4f2ed; background: var(--navy); font: .8em/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+    .speaker-notes { margin-top: 16px; color: var(--muted); font-size: .76em; }
+    .speaker-notes summary { width: fit-content; color: var(--green); cursor: pointer; font-weight: 750; }
+    .speaker-notes p { max-width: 1000px; margin: 8px 0 0; }
+    footer { position: fixed; inset: auto 0 0; z-index: 5; display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 9px max(18px, calc((100vw - 1280px)/2)); border-top: 1px solid #d5dfda; background: #fffffff2; backdrop-filter: blur(8px); }
+    footer button { padding: 9px 14px; border: 0; border-radius: 8px; color: var(--white); background: var(--navy); cursor: pointer; font-size: .82em; font-weight: 700; }
+    footer button:hover { background: var(--green); }
+    footer button:focus-visible, summary:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+    footer button:disabled { opacity: .45; cursor: default; }
+    #counter { margin-left: auto; color: var(--muted); font-size: .78em; white-space: nowrap; }
+    #progress { position: absolute; inset: auto auto 0 0; height: 4px; width: 0; background: var(--green); transition: width .2s ease; }
+    @media (max-width: 760px) {
+      .deck { padding: 8px 8px 80px; }
+      .slide { min-height: calc(100vh - 96px); padding: 52px 23px 30px; border-radius: 14px; }
+      .time-tag { top: 14px; right: 16px; }
+      .grid, .grid.three, .columns { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-step:not(:last-child):after { content: "⌄"; top: auto; right: 48%; bottom: -22px; }
+      .tech { grid-template-columns: 100px 1fr; }
+      footer { gap: 6px; padding-inline: 8px; }
+      footer button { padding: 9px 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *:before, *:after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media print {
+      @page { size: 16in 9in; margin: 0; }
+      html, body { background: white; }
+      .deck { padding: 0; }
+      .slide, .slide.active { display: flex !important; width: 100%; height: 100vh; min-height: 100vh; max-height: 100vh; margin: 0; border: 0; border-radius: 0; box-shadow: none; page-break-after: always; break-after: page; }
+      footer, .speaker-notes { display: none !important; }
+      .slide.cover { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+<main class="deck" aria-label="Presentación VeredaSegura">
+  <section class="slide cover active" data-seconds="30" aria-labelledby="s1">
+    <span class="time-tag">0:30</span>
+    <p class="eyebrow">Proyecto final · Data Science · EnergIA Digital</p>
+    <h1 id="s1">VeredaSegura</h1>
+    <h2>¿Qué características de los árboles se relacionan con daño observado en las veredas?</h2>
+    <p class="lead">Un análisis educativo del censo de arbolado de NYC para entender datos, modelos y sus límites.</p>
+    <p class="team">Enzo Fernández · Juan Ignacio Olivares · Gabriel Quispe</p>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>Presentar la pregunta y anticipar el límite clave: el trabajo clasifica lo registrado en 2015, no predice futuras roturas.</p></details>
+  </section>
+
+  <section class="slide" data-seconds="60" aria-labelledby="s2">
+    <span class="time-tag">1:00</span>
+    <p class="eyebrow">01 · Motivación</p>
+    <h2>¿Por qué estudiar este problema?</h2>
+    <div class="grid three">
+      <article class="card"><h3>Impacto cotidiano</h3><p>Las veredas dañadas pueden dificultar la circulación y requieren mantenimiento.</p></article>
+      <article class="card"><h3>Pregunta de datos</h3><p>¿Hay patrones entre el arbolado, su entorno y el estado de vereda registrado junto a cada árbol?</p></article>
+      <article class="card"><h3>Valor del proyecto</h3><p>Aplicar un flujo completo de ciencia de datos y practicar una evaluación responsable.</p></article>
+    </div>
+    <div class="callout green"><b>Objetivo real:</b> clasificar `Damage` / `NoDamage` según la observación del censo. No estimamos cuándo se dañará una vereda.</div>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>Explicar la motivación como un caso para aprender y generar hipótesis. No decir que el modelo ya prioriza obras ni que reduce accidentes.</p></details>
+  </section>
+
+  <section class="slide" data-seconds="65" aria-labelledby="s3">
+    <span class="time-tag">1:05</span>
+    <p class="eyebrow">02 · Datos</p>
+    <h2>Una muestra manejable de un censo histórico</h2>
+    <div class="columns">
+      <article class="card">
+        <div class="grid three">
+          <div><div class="metric">100.000</div><p class="metric-label">árboles en la muestra</p></div>
+          <div><div class="metric">20</div><p class="metric-label">campos incluidos</p></div>
+          <div><div class="metric">2015</div><p class="metric-label">año del censo</p></div>
+        </div>
+        <p style="margin:20px 0 8px"><b>Filtros aplicados:</b> árboles vivos, etiqueta conocida y diámetro de 1–60 pulgadas.</p>
+        <p class="small">Fuente: NYC Open Data · 2015 Street Tree Census. El descargador permite regenerar la muestra con semilla fija.</p>
+      </article>
+      <article class="chart-card">
+        <p class="chart-title">Distribución de la etiqueta en la muestra</p>
+        <div class="stacked" role="img" aria-label="71,22 por ciento NoDamage y 28,78 por ciento Damage"><span class="no-damage">71,2%</span><span class="damage">28,8%</span></div>
+        <div class="legend"><span><i class="key"></i>NoDamage · 71.223</span><span><i class="key gold"></i>Damage · 28.777</span></div>
+        <div class="callout"><b>¿Por qué importa?</b> Las clases están desbalanceadas; por eso accuracy sola no alcanza para evaluar el modelo.</div>
+      </article>
+    </div>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>Aclarar que es una muestra reproducible del censo, no datos actuales ni de Argentina. La API de descarga conserva registros elegibles y el CSV incluido permite reproducir el análisis sin conexión.</p></details>
+  </section>
+
+  <section class="slide" data-seconds="80" aria-labelledby="s4">
+    <span class="time-tag">1:20</span>
+    <p class="eyebrow">03 · Exploración</p>
+    <h2>El diámetro muestra una asociación descriptiva</h2>
+    <div class="columns">
+      <article class="chart-card">
+        <p class="chart-title">Proporción con `Damage` por rango de diámetro</p>
+        <div class="bar-chart" role="img" aria-label="Barras de tasa observada de daño por rango de diámetro">
+          <div class="bar-row"><span class="bar-label">0–6 pulg.</span><span class="track"><span class="fill" style="display:block;width:31.4%"></span></span><span class="bar-value">15,4%</span></div>
+          <div class="bar-row"><span class="bar-label">6–12</span><span class="track"><span class="fill" style="display:block;width:57.7%"></span></span><span class="bar-value">28,3%</span></div>
+          <div class="bar-row"><span class="bar-label">12–18</span><span class="track"><span class="fill" style="display:block;width:80.4%"></span></span><span class="bar-value">39,4%</span></div>
+          <div class="bar-row"><span class="bar-label">18–24</span><span class="track"><span class="fill" style="display:block;width:85.3%"></span></span><span class="bar-value">41,8%</span></div>
+          <div class="bar-row"><span class="bar-label">24–36</span><span class="track"><span class="fill" style="display:block;width:93.2%"></span></span><span class="bar-value">45,7%</span></div>
+          <div class="bar-row"><span class="bar-label">36–60</span><span class="track"><span class="fill" style="display:block;width:100%"></span></span><span class="bar-value">49,0%</span></div>
+        </div>
+        <p class="source">Cada barra usa la etiqueta observada en la muestra de 100.000 árboles; la última categoría tiene 984 casos.</p>
+      </article>
+      <article class="card">
+        <h3>¿Qué hicimos con los datos?</h3>
+        <ul>
+          <li>Revisamos faltantes, tipos, rangos y balance de clases.</li>
+          <li>Resumimos 9 indicadores de conflictos en 3 puntajes.</li>
+          <li>Usamos `sidewalk` como etiqueta, nunca como predictor.</li>
+        </ul>
+        <div class="callout"><b>Interpretación:</b> los árboles grandes presentan más daño registrado en esta muestra. Esto no demuestra que el diámetro sea la causa.</div>
+      </article>
+    </div>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>Leer la tendencia de izquierda a derecha y enfatizar que son porcentajes descriptivos. Pueden influir especie, ubicación, mantenimiento, calidad del registro y otras variables.</p></details>
+  </section>
+
+  <section class="slide" data-seconds="75" aria-labelledby="s5">
+    <span class="time-tag">1:15</span>
+    <p class="eyebrow">04 · Tecnologías y flujo</p>
+    <h2>¿Qué herramientas usamos y para qué?</h2>
+    <div class="flow" aria-label="Flujo tecnológico del proyecto">
+      <div class="flow-step"><b>NYC Open Data</b><span>Fuente pública y descargador Python</span></div>
+      <div class="flow-step"><b>Pandas / NumPy</b><span>Filtrar, explorar y crear variables</span></div>
+      <div class="flow-step"><b>scikit-learn</b><span>Pipeline, validación y modelos</span></div>
+      <div class="flow-step"><b>GridSearchCV</b><span>Comparar hiperparámetros en train</span></div>
+      <div class="flow-step"><b>FastAPI</b><span>Exponer el pipeline con `/predict`</span></div>
+    </div>
+    <div class="grid three" style="margin-top:18px">
+      <article class="card"><h3>Jupyter</h3><p>Documenta el análisis paso a paso, con tablas y gráficos.</p></article>
+      <article class="card"><h3>Matplotlib / Seaborn</h3><p>Ayudan a ver distribución, tendencias y errores del modelo.</p></article>
+      <article class="card"><h3>K-Means / DBSCAN</h3><p>Exploran grupos sin usar la etiqueta de daño.</p></article>
+    </div>
+    <div class="callout green"><b>¿Por qué un Pipeline?</b> Mantiene el preprocesamiento junto al modelo y ajusta la codificación durante la validación, evitando que el test enseñe categorías al entrenamiento.</div>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>Explicar herramientas por función, no como lista de marcas: Pandas organiza; scikit-learn prepara y evalúa; FastAPI permite consultar una predicción. El Pipeline hace reproducible y consistente el preprocesamiento.</p></details>
+  </section>
+
+  <section class="slide" data-seconds="110" aria-labelledby="s6">
+    <span class="time-tag">1:50</span>
+    <p class="eyebrow">05 · Modelo supervisado</p>
+    <h2>El resultado mejora la detección, pero comete errores</h2>
+    <div class="columns">
+      <article class="card">
+        <h3>Random Forest · test (20.000 casos)</h3>
+        <div class="grid three">
+          <div><div class="metric">0,548</div><p class="metric-label">F1 · Damage</p></div>
+          <div><div class="metric">0,615</div><p class="metric-label">Recall · Damage</p></div>
+          <div><div class="metric">0,741</div><p class="metric-label">ROC-AUC</p></div>
+        </div>
+        <p style="margin:18px 0 6px"><b>GridSearchCV:</b> 100 árboles · profundidad 16 · mínimo 10 casos por hoja.</p>
+        <p class="small">Partición estratificada 80/20 · semilla 42 · F1 CV del mejor ajuste: 0,544.</p>
+        <div class="callout"><b>Ojo con accuracy:</b> el modelo tuvo 0,708; Dummy tuvo 0,712, pero Dummy obtuvo F1=0 y recall=0 en `Damage`.</div>
+      </article>
+      <article class="chart-card">
+        <p class="chart-title">Matriz de confusión · filas reales, columnas predichas</p>
+        <table class="matrix" aria-label="Matriz de confusión: verdaderos y predichos">
+          <thead><tr><th></th><th>Pred. NoDamage</th><th>Pred. Damage</th></tr></thead>
+          <tbody>
+            <tr><th>Real NoDamage</th><td class="high">10.623</td><td class="false-alarm">3.622</td></tr>
+            <tr><th>Real Damage</th><td class="miss">2.216</td><td class="high">3.539</td></tr>
+          </tbody>
+        </table>
+        <p class="matrix-caption">10.623 y 3.539 aciertos · 3.622 falsas alarmas · 2.216 daños observados no detectados.</p>
+        <div class="callout green"><b>Lectura simple:</b> recupera 61,5% de los daños registrados; de todas formas, no detecta 38,5%.</div>
+      </article>
+    </div>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>F1 equilibra precisión y recall para la clase Damage. Precision 0,494 implica que cerca de la mitad de las alertas son falsas; recall 0,615 implica que queda daño observado sin detectar. No afirmar que el modelo es “preciso” en términos generales.</p></details>
+  </section>
+
+  <section class="slide" data-seconds="65" aria-labelledby="s7">
+    <span class="time-tag">1:05</span>
+    <p class="eyebrow">06 · Aprendizaje no supervisado</p>
+    <h2>El clustering descubre similitudes, no niveles de riesgo</h2>
+    <div class="columns">
+      <article class="chart-card">
+        <p class="chart-title">K-Means · tamaños de los 3 grupos (10.000 árboles)</p>
+        <div class="bar-chart cluster-bars">
+          <div class="bar-row"><span class="bar-label">Grupo 0</span><span class="track"><span class="fill c0" style="display:block;width:9.6%"></span></span><span class="bar-value">670</span></div>
+          <div class="bar-row"><span class="bar-label">Grupo 1</span><span class="track"><span class="fill c1" style="display:block;width:100%"></span></span><span class="bar-value">7.004</span></div>
+          <div class="bar-row"><span class="bar-label">Grupo 2</span><span class="track"><span class="fill c2" style="display:block;width:33.2%"></span></span><span class="bar-value">2.326</span></div>
+        </div>
+        <div class="legend"><span>Silhouette máximo: 0,282 con k=3</span></div>
+      </article>
+      <article class="card">
+        <h3>¿Qué separa a los grupos?</h3>
+        <ul>
+          <li>Mediana de diámetro: 11, 8 y 16 pulgadas.</li>
+          <li>Mediana de conflictos de raíz: 0, 0 y 1.</li>
+          <li>DBSCAN: 5 grupos y 1,2% de puntos marcados como ruido.</li>
+        </ul>
+        <div class="callout">Silhouette bajo/modesto y codificación categórica: interpretación cautelosa. No son grupos “de riesgo”.</div>
+      </article>
+    </div>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>Se excluyeron sidewalk y target. K-Means y DBSCAN se aplicaron a características del árbol y entorno. Los resultados dependen de muestra, variables, escalado y parámetros; no validan perfiles reales.</p></details>
+  </section>
+
+  <section class="slide" data-seconds="70" aria-labelledby="s8">
+    <span class="time-tag">1:10</span>
+    <p class="eyebrow">07 · Del análisis a una demo</p>
+    <h2>Una API para demostrar el flujo de inferencia</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Cómo levantarla</h3>
+        <code class="code">python Final/train.py<br>uvicorn Final.app:app --reload</code>
+        <p style="margin-top:14px">Luego abrir <code>/docs</code> y probar `POST /predict`.</p>
+        <p class="small">También hay un endpoint `GET /health`.</p>
+      </article>
+      <article class="card">
+        <h3>Qué entra y qué sale</h3>
+        <p><b>Entrada:</b> diámetro, especie, salud, borough y conflictos observados.</p>
+        <p><b>Salida:</b> clase estimada y probabilidad del modelo.</p>
+        <div class="callout">Probabilidad ilustrativa, no calibrada para decisiones operativas. La API no está desplegada públicamente.</div>
+      </article>
+    </div>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>Mostrar Swagger `/docs` si hay tiempo; si no, explicar que FastAPI valida el JSON y pasa las variables al mismo pipeline usado en entrenamiento. No presentar la API como sistema de producción.</p></details>
+  </section>
+
+  <section class="slide" data-seconds="45" aria-labelledby="s9">
+    <span class="time-tag">0:45</span>
+    <p class="eyebrow">08 · Cierre</p>
+    <h2>La principal conclusión es también un límite</h2>
+    <div class="grid">
+      <article class="card"><h3>Lo que aprendimos</h3><p>Un flujo reproducible convierte registros públicos en análisis, evaluación y una demo de API.</p></article>
+      <article class="card"><h3>Lo que falta para uso real</h3><p>Datos recientes y locales, validación por zona, revisión humana, auditoría de sesgos y consulta comunitaria.</p></article>
+    </div>
+    <div class="callout green"><b>Mensaje final:</b> clasificamos una observación histórica de NYC (2015); no predecimos daño futuro ni recomendamos intervenciones automáticas.</div>
+    <p class="lead" style="margin:20px 0 0">Gracias · Preguntas</p>
+    <details class="speaker-notes"><summary>Notas para exponer</summary><p>Cerrar con una limitación clara y ofrecer preguntas. Si preguntan por aplicación local, responder que no se validó fuera de NYC ni con datos actuales.</p></details>
+  </section>
+</main>
+<footer aria-label="Controles de presentación">
+  <button id="prev" type="button" aria-label="Diapositiva anterior">← Anterior</button>
+  <button id="next" type="button" aria-label="Diapositiva siguiente">Siguiente →</button>
+  <button id="fullscreen" type="button" aria-label="Alternar pantalla completa">⛶ Pantalla completa</button>
+  <span id="counter" aria-live="polite"></span>
+  <div id="progress" role="progressbar" aria-label="Progreso de la presentación"></div>
+</footer>
+<script>
+  (() => {
+    const slides = [...document.querySelectorAll(".slide")];
+    const prev = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+    const counter = document.querySelector("#counter");
+    const progress = document.querySelector("#progress");
+    let current = 0;
+    const secondsBefore = slides.map((_, index) =>
+      slides.slice(0, index).reduce((sum, slide) => sum + Number(slide.dataset.seconds), 0)
+    );
+    const format = value => `${Math.floor(value / 60)}:${String(value % 60).padStart(2, "0")}`;
+    function show(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((slide, i) => {
+        const active = i === current;
+        slide.classList.toggle("active", active);
+        slide.setAttribute("aria-hidden", String(!active));
+      });
+      const end = secondsBefore[current] + Number(slides[current].dataset.seconds);
+      counter.textContent = `${current + 1} / ${slides.length} · ${format(secondsBefore[current])}–${format(end)} / 10:00`;
+      progress.style.width = `${(end / 600) * 100}%`;
+      progress.setAttribute("aria-valuenow", String(Math.round((end / 600) * 100)));
+      progress.setAttribute("aria-valuemin", "0");
+      progress.setAttribute("aria-valuemax", "100");
+      prev.disabled = current === 0;
+      next.disabled = current === slides.length - 1;
+      history.replaceState(null, "", `#slide-${current + 1}`);
+    }
+    prev.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.querySelector("#fullscreen").addEventListener("click", async () => {
+      if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.();
+      else await document.exitFullscreen?.();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.target.closest("details")) return;
+      if (["ArrowRight", " ", "PageDown"].includes(event.key)) { event.preventDefault(); show(current + 1); }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) { event.preventDefault(); show(current - 1); }
+      if (event.key === "Home") show(0);
+      if (event.key === "End") show(slides.length - 1);
+      if (event.key.toLowerCase() === "f") document.querySelector("#fullscreen").click();
+    });
+    const requested = Number(location.hash.match(/slide-(\d+)/)?.[1] || 1) - 1;
+    show(requested);
+  })();
+</script>
+</body>
+</html>
