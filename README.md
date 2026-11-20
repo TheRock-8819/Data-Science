@@ -11,7 +11,8 @@ Proyecto integrador del curso Data Science / EnergIA Digital 2026. Analizamos el
 - [`Final/Clustering.ipynb`](Final/Clustering.ipynb): K-Means, silhouette, perfiles exploratorios y contraste opcional con DBSCAN.
 - [`Final/model.py`](Final/model.py), [`Final/train.py`](Final/train.py), [`Final/app.py`](Final/app.py): ingeniería de variables, entrenamiento reproducible y API FastAPI.
 - [`Final/download_dataset.py`](Final/download_dataset.py): descarga una muestra reproducible de NYC Open Data a `Final/data/`.
-- [`Presentaciones/Proyecto_Final.html`](Presentaciones/Proyecto_Final.html): presentación de 10 minutos, con gráficos, tecnologías explicadas y notas para exponer.
+- [`Presentaciones/Proyecto_Final.html`](Presentaciones/Proyecto_Final.html): presentación de 10 minutos, con gráficos y lenguaje accesible.
+- [`Presentaciones/Guion_Exposicion.md`](Presentaciones/Guion_Exposicion.md): explicación de cada diapositiva, tiempos sugeridos, transiciones y respuestas a preguntas frecuentes.
 - `requirements.txt`: entorno reproducible para notebooks, entrenamiento y API.
 
 ## Inicio rápido
