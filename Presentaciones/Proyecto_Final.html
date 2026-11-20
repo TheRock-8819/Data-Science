@@ -33,8 +33,6 @@
     .lead{max-width:850px;color:var(--muted);font-size:clamp(20px,2vw,26px)}
     .cover .lead{color:#d2e0e4}
     .team{margin:34px 0 0;color:#c4d6dc;font-size:.9em}
-    .time-tag{position:absolute;top:25px;right:28px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--white);font-size:.75em;font-weight:750}
-    .cover .time-tag{border-color:#ffffff32;color:#d9e8e5;background:#ffffff0c}
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
     .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
     .card{min-width:0;padding:20px 22px;border:1px solid var(--line);border-radius:15px;background:var(--white);box-shadow:0 5px 16px #15354308}
@@ -89,7 +87,7 @@
     #progress{position:absolute;inset:auto auto 0 0;height:4px;width:0;background:var(--green);transition:width .2s ease}
     @media(max-width:760px){
       .deck{padding:8px 8px 80px}.slide{min-height:calc(100vh - 96px);padding:52px 23px 30px;border-radius:14px}
-      .time-tag{top:14px;right:16px}.grid,.grid.three,.columns{grid-template-columns:1fr}
+      .grid,.grid.three,.columns{grid-template-columns:1fr}
       .flow{grid-template-columns:1fr}.flow-step:not(:last-child):after{content:"⌄";top:auto;right:48%;bottom:-22px}
       .tech{grid-template-columns:100px 1fr}footer{gap:6px;padding-inline:8px}footer button{padding:9px 10px}
     }
@@ -103,8 +101,7 @@
 </head>
 <body>
 <main class="deck" aria-label="Presentación VeredaSegura">
-  <section class="slide cover active" data-seconds="30" aria-labelledby="s1">
-    <span class="time-tag">0:30</span>
+  <section class="slide cover active" aria-labelledby="s1">
     <p class="eyebrow">Proyecto final · Data Science · EnergIA Digital</p>
     <h1 id="s1">Árboles y veredas</h1>
     <h2>¿Qué nos cuentan los datos sobre el estado de las veredas?</h2>
@@ -112,8 +109,7 @@
     <p class="team">Enzo Fernández · Juan Ignacio Olivares · Gabriel Quispe</p>
   </section>
 
-  <section class="slide" data-seconds="60" aria-labelledby="s2">
-    <span class="time-tag">1:00</span>
+  <section class="slide" aria-labelledby="s2">
     <p class="eyebrow">01 · La pregunta</p>
     <h2>¿Por qué elegimos este tema?</h2>
     <div class="grid three">
@@ -124,8 +120,7 @@
     <div class="callout green"><b>Lo que sí hacemos:</b> estudiamos lo que se anotó durante el censo de 2015. No intentamos adivinar daños futuros.</div>
   </section>
 
-  <section class="slide" data-seconds="65" aria-labelledby="s3">
-    <span class="time-tag">1:05</span>
+  <section class="slide" aria-labelledby="s3">
     <p class="eyebrow">02 · Los datos</p>
     <h2>Una muestra de 100.000 árboles</h2>
     <div class="columns">
@@ -147,8 +142,7 @@
     </div>
   </section>
 
-  <section class="slide" data-seconds="80" aria-labelledby="s4">
-    <span class="time-tag">1:20</span>
+  <section class="slide" aria-labelledby="s4">
     <p class="eyebrow">03 · Lo que observamos</p>
     <h2>En la muestra, los árboles más gruesos aparecen más a menudo junto a daño anotado</h2>
     <div class="columns">
@@ -172,8 +166,7 @@
     </div>
   </section>
 
-  <section class="slide" data-seconds="75" aria-labelledby="s5">
-    <span class="time-tag">1:15</span>
+  <section class="slide" aria-labelledby="s5">
     <p class="eyebrow">04 · Herramientas</p>
     <h2>¿Qué tecnologías usamos y para qué?</h2>
     <div class="flow" aria-label="Etapas del proyecto">
@@ -191,8 +184,7 @@
     <div class="callout green"><b>¿Por qué estas herramientas?</b> Permiten repetir el análisis, comparar resultados y usar los mismos pasos al evaluar el modelo y al hacer una consulta.</div>
   </section>
 
-  <section class="slide" data-seconds="110" aria-labelledby="s6">
-    <span class="time-tag">1:50</span>
+  <section class="slide" aria-labelledby="s6">
     <p class="eyebrow">05 · ¿Qué tan bien funcionó?</p>
     <h2>Detecta parte del daño, pero también se equivoca</h2>
     <div class="columns">
@@ -221,8 +213,7 @@
     </div>
   </section>
 
-  <section class="slide" data-seconds="65" aria-labelledby="s7">
-    <span class="time-tag">1:05</span>
+  <section class="slide" aria-labelledby="s7">
     <p class="eyebrow">06 · Agrupar casos parecidos</p>
     <h2>También exploramos si había grupos de árboles similares</h2>
     <div class="columns">
@@ -244,8 +235,7 @@
     </div>
   </section>
 
-  <section class="slide" data-seconds="70" aria-labelledby="s8">
-    <span class="time-tag">1:10</span>
+  <section class="slide" aria-labelledby="s8">
     <p class="eyebrow">07 · Una demostración</p>
     <h2>Del cuaderno de análisis a una consulta simple</h2>
     <div class="grid">
@@ -263,8 +253,7 @@
     <div class="callout green"><b>Es una prueba educativa en la computadora;</b> no es una herramienta pública ni está lista para tomar decisiones reales.</div>
   </section>
 
-  <section class="slide" data-seconds="45" aria-labelledby="s9">
-    <span class="time-tag">0:45</span>
+  <section class="slide" aria-labelledby="s9">
     <p class="eyebrow">08 · Cierre</p>
     <h2>¿Qué nos llevamos?</h2>
     <div class="grid">
@@ -290,10 +279,6 @@
     const counter = document.querySelector("#counter");
     const progress = document.querySelector("#progress");
     let current = 0;
-    const before = slides.map((_, index) =>
-      slides.slice(0, index).reduce((sum, slide) => sum + Number(slide.dataset.seconds), 0)
-    );
-    const clock = value => `${Math.floor(value / 60)}:${String(value % 60).padStart(2, "0")}`;
     function show(index) {
       current = Math.max(0, Math.min(slides.length - 1, index));
       slides.forEach((slide, i) => {
@@ -301,10 +286,10 @@
         slide.classList.toggle("active", active);
         slide.setAttribute("aria-hidden", String(!active));
       });
-      const end = before[current] + Number(slides[current].dataset.seconds);
-      counter.textContent = `${current + 1} / ${slides.length} · ${clock(before[current])}–${clock(end)} / 10:00`;
-      progress.style.width = `${end / 6}%`;
-      progress.setAttribute("aria-valuenow", String(Math.round(end / 6)));
+      const percent = ((current + 1) / slides.length) * 100;
+      counter.textContent = `Diapositiva ${current + 1} de ${slides.length}`;
+      progress.style.width = `${percent}%`;
+      progress.setAttribute("aria-valuenow", String(Math.round(percent)));
       progress.setAttribute("aria-valuemin", "0");
       progress.setAttribute("aria-valuemax", "100");
       prev.disabled = current === 0;
